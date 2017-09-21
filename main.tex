@@ -1,0 +1,292 @@
+\documentclass{article}
+
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName}
+\chead{\hmwkClass\ : \hmwkTitle}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+
+\newcommand{\hmwkTitle}{Reading Notes}
+\newcommand{\hmwkClass}{CS231: Fundamentals of Algorithms}
+\newcommand{\hmwkAuthorName}{\textbf{Sophiya Chiang}}
+
+%
+% Create Problem Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Reading \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Reading \arabic{#1} (continued)}{Reading \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Reading \arabic{#1} (continued)}{Reading \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Reading \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Problem \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Problem Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Reading \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Last updated: 20 September 2017}\\
+    \vspace{3in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Part \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+%Reading for September 11, 2017
+\begin{homeworkProblem}
+\textbf{Tractability and Asymptotic order of growth}\\
+\textbf{Sections 2.1 and 2.2}\\\\
+\underline{\textbf{2.1 Computational Tractability}}
+\begin{itemize}
+\item
+\textit{Worst-case} running time: A bound on the largest possible running time the algorithm could have over all inputs of a given size $N$
+\item An algorithm is efficient if it achieves qualitatively better worst-case performances, at an analytical level, than brute-force search.
+\item An algorithm is efficient if it has a polynomial running time: lower-degree polynomials exhibit better scaling behavior than higher-degree polynomials.
+\end{itemize}
+
+\underline{\textbf{2.2 Asymptotic Order of Growth}}
+\begin{itemize}
+\item An algorithm's worst-case running time on inputs of size $n$ grows at a rate that is at most proportional to some function $f(n)$. The function $f(n)$ becomes a bound on the running time of the algorithm.
+\item
+\textit{Asymptotic upper bounds:} $T(n)$ is $O(n)$ ($T(n)$ is order of $n$) if, for sufficiently large $n$ the function $T(n)$ is bounded above by a constant multiple of $f(n)$. So, $T(n)$ is \textit{asymptotically upper-bounded by $f(n)$}.
+\begin{center}
+    $T(n) \in O(n)$ if $\exists (c > 0$ and $n_0 \geq 0)$ $\mid$ \ $\forall n \geq n_0, T(n) \leq c \cdot f(n)$
+\end{center}
+
+\item
+\textit{Asymptotic lower bounds:} $T(n)$ is $\Omega(n)$ if, for arbitrarily large input size $n$, the function $T(n)$ is at least a constant multiple of $f(n)$. So, $T(n)$ is \textit{asymptotically lower-bounded by $f(n)$}.
+\begin{center}
+    $T(n) \in O(n)$ if $\exists (\epsilon > 0$ and $n_0 \geq 0)$ $\mid$ \ $\forall n \geq n_0, T(n) \geq \epsilon \cdot f(n)$
+\end{center}
+
+\item
+\textit{Asymptotically tight bounds:} If a function is both $O(n)$ and $\Omega(n)$, then $T(n)$ is $\Theta(n)$. They characterize the worse-case performance of an algorithm precisely up to constant factors. So, $f(n)$ is an \textit{asymptotically tight bound for $T(n)$}. One can sometimes obtain an asymptotically tight bound directly by computing the limit as $n$ goes to infinity. If the ratio of functions $f(n)$ and $g(n)$ converges to a positive constant as $n$ goes to infinity, then $f(n) \in \Theta(g(n))$
+\begin{center}
+    $T(n) \in O(n)$ if $\exists (\epsilon > 0$ and $n_0 \geq 0)$ $\mid$ \ $\forall n \geq n_0, T(n) \geq \epsilon \cdot f(n)$
+\end{center}
+
+\item 
+\textbf{Properties of Asymptotic Growth Rates:}
+\textit{Transitivity:} If a function $f$ is asymptotically upper-bounded by a function $g$, and $g$ is asymptotically upper-bounded by $h$, then $f$ is asymptotically upper-bounded by $h$. 
+\begin{enumerate}
+\item
+If $f = O(g)$ and $g = O(h)$, then $f = O(h)$.
+\item
+If $f = \Omega(g)$ and $g = \Omega(h)$, then $f = \Omega(h)$.
+\item 
+If $f = \Theta(g)$ and $g = \Theta(h)$, then $f = \Theta(h)$.
+\item
+Suppose that $f$ and $g$ are two functions such that for some other function $h$, we have $f=O(h)$ and $g=O(h)$. Then, $f + g = O(h)$.
+\item 
+Let $k$ be  fixed constant, and let $f_1, f_2,\ldots, f_k$ and $h$ be functions such that $f_i = O(h) \forall i$. Then, $f_1 + f_2+\ldots+ f_k = O(h)$.
+\item
+Suppose that $f$ and $g$ are two functions (taking non-negative values) such that for $g = O(f)$. Then, $f + g = \Theta(f)$. $f$ is an asymptotically tight bound for the combined function $f + g$.
+
+\end{enumerate}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+
+%Reading for September 14, 2017
+\begin{homeworkProblem}
+\textbf{The Stable Matching Problem}\\
+\textbf{Sections 2.3}\\\\
+\underline{\textbf{2.3 Implementing the Stable Matching Algorithm Using Lists and Arrays}}
+\begin{itemize}
+\item
+Consider how the data will be represented and manipulated in an implementation of the algorithm, so as to bound the number of computational steps it takes.
+\item
+Considering the Gale-Shapely Matching algorithm, the algorithm terminates in at most $n^2$ iterations and to get an implementation with worst-case running time of $O(n^2)$, we need to be able to implement each iteration in constant time by counting actual computational steps rather than simply the total number of iterations using arrays and lists.
+\item
+We need to be able to do each of these four steps of the algorithm in constant time:
+\begin{enumerate}
+    \item Identify a free man. \textbf{Implemented in $O(1)$ time}
+        \begin{itemize}
+            \item Maintaining the set of free men as a linked list.
+            \item When selecting a free man, we take the first man $m$ on this list. 
+            \item We delete $m$ from the list if he becomes engaged, and possibly insert a different man $m'$, if some other man $m'$ becomes free. $m'$ can be inserted at the front of the list at constant time in this case.
+        \end{itemize}
+    \item For a man $m$, we need to identify the highest-ranked woman to whom he has not yet proposed. \textbf{Implemented in $O(1)$ time}
+        \begin{itemize}
+        \item 
+        Maintain an extra array $Next$ that indicates for each man $m$ the position of the next woman he will propose to on his list.
+        \item We initialize $Next[m] = 1$ for all men $m$. If a man $m$ needs to propose to a woman, he'll propose to $w = ManPref[m, Next[m]]$
+        \item Once he proposes to $w$, we increment the value of $Next[m]$ by one, regardless of whether $w$ accepts the proposal.
+        \end{itemize}
+    \item For a woman $w$, we need to decide if $w$ is currently engaged, and if she is, we need to identify her current partner. \textbf{Implemented in $O(1)$ time}
+        \begin{itemize}
+            \item Assuming man $m$ proposes to woman $w$, we need to identify the man $m'$ that $w$ is currently engaged to (if exists).
+            \item Maintain an array $Current$ of length $n$, where $Current[w]$ is the woman $w$'s current partner $m'$.
+            \item We set $Current[w]$ to a special null value when woman $w$ is not currently engaged.
+            \item Initialize $Current[w]$ to null value at the start of the algorithm.
+        \end{itemize}
+    
+    \item For a woman $w$, and two men $m$ and $m'$, we need to be able to decide in constant time, which of $m$ or $m'$ is preferred by $w$. \textbf{Implemented in $O(n^2)$ time}
+        \begin{itemize}
+            \item At the start of algorithm, we create an $n\times n$ array $Ranking$, where $Ranking[w,m]$ contains the rank of man $m$ in the sorted order of $w$'s preferences. 
+            \item By a single pass through $w$'s preference list, we can create this array in linear time for each woman, for a total initial time investment proportional to $n^2$.
+            \item To decide which of $m$ or $m'$ is preferred by $w$, we simply compare values $Ranking[w,m]$ to $Ranking[w,m']$.
+        \end{itemize}
+\end{enumerate}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+
+%Reading for September 18, 2017
+\begin{homeworkProblem}
+\textbf{Priority Queues}\\
+\textbf{Sections 2.5}\\\\
+\underline{\textbf{2.5 Priority Queues}}
+\begin{itemize}
+    \item For the Stable Matching algorithm, we need to maintain a dynamically changing set $S$ (set of free men in this case).
+    \item We want to be able to add and delete elements from the set $S$, and we want to be able to select an element $S$ when the algorithm calls for it.
+    \item A priority queue is designed for applications in which elements have a \textit{priority value (key)} and each time we need to select an element from $S$, we want to take the one with hightest priority.
+    \item Maintains a set of elements $S$, where element $v \in S$ has an associated value $key(v)$ that denotes the priority of element $v$, where smaller keys represent higher priorities.
+    \item Supports the addition and deletion of elements from the set, and also the selection of the element with smallest key. 
+    \item Each process has a priority/urgency, but processes do not arrive in order of their priorities.
+    \item Implementation of a priority queue containing at most $n$ elements at any time so that elements can be added and deleted, and the element with minimum key selected, in $O(log (n))$ time per operation.
+    \item \textit{A sequence of $O(n)$ priority queue operations can be used to sort a set of $n$ numbers}\\
+    \textbf{Proof: }Set up a priority queue $H$, and insert each number into $H$ with its value as a key. Then extract the smallest number one by one until all numbers have been extracted. This way, the numbers will come out of the priority queue in sorted order.
+    \item So with a priority queue that can perform insertion and deletion of minima $O(log(n))$ time per operation, we can sort $n$ numbers in $O(n(log(n)))$ time.
+    
+    \item\textbf{Heap} - Implementing a Priority Queue
+    \begin{itemize}
+        \item The heap data structure combines the benefits of a sorted array and list for purposes of this application.
+        \item Conceptually, we can think of it as a balanced binary tree. Where the tree will have a root, and each node can have up to two children (A left and a right child).
+        \item \textit{Heap order: }If the key of any element is at least as large as the key of the element at its parent node in the tree.
+        \begin{center}
+        For every element $v$, at a node $i$, the element $w$ at $i$'s parent satisfies $key(w) \leq key(i)$.
+        \end{center}
+        \item If a bound $N$ is known in advance on the total number of elements that will ever be in the heap at any one time, we can maintain the heap in an array $H$ indexed by $i=1, 2, \ldots, N$.
+        \item We can think of heap nodes as corresponding to the positions of the array, with $H[1]$ being the root.
+        \item For any node at position $i$, the children are the nodes at position $leftChild(i) = 2i$ and $rightChild(i) = 2i+1$. And the parent of a node at position $i$ is at position $parent(i) = i/2$.
+        \item If the heap has $n<N$ elements at some time, we can use the first $n$ positions of the array to store the $n$ heap elements. Using $length(H)$ to denote the number of elements in $H$. So the heap is balanced at all times.
+    \end{itemize}
+    \item\textbf{Implementing the Heap Operations:}
+    \begin{itemize}
+        \item The heap element with smallest key is at the root, so it takes $O(1)$ time to identify the minimal element. 
+        \item Adding element $v$ to final position $i = n + 1$ and fixing the heap with \textbf{Heapify-up} by moving element $v$ towards the root. 
+        \item The \textbf{Heapify-up} procedure fixes the heap property in $O(log(n))$ time, assuming that the array $H$ is almost a heap with the key $H[i]$ too small. Using the following procedure, we can insert a new element in a heap of $n$ elements in $O(log(n))$ time.
+        \begin{lstlisting}
+        Heapify-up(H,i):
+            If i > 1 then
+                let j = parent(i) = (1/2)
+                If key[H[i]] < key[H[j]] then
+                    swap the array entries H[i] and H[j]
+                    Heapify-up(H,j)
+                Endif
+            Endif
+        \end{lstlisting}
+        Proof by induction on pp.62 of textbook.
+        \item Procedure \textbf{Heapify-down} swaps the element at position $i$ with one of its children and proceeds down the tree recursively.
+        \item \textbf{Heapify-down(H,i)} fixes the heap property in $O(log(n))$ time, assuming that $H$ is almost a heap with the key value of $H[i]$ too big. Using \textbf{Heapify-up} or \textbf{Heapify-down}, we can delete a new element in a heap of n elements in $O(log(n))$ time.
+        \begin{lstlisting}
+        Heapify-down(H,i):
+            Let n = length(H)
+            If 2i > n then
+                Terminate with H unchanged
+            Else if 2i < n then
+                Let left = 2i, and right = 2i + 1
+                Let j be the index that minimizes key[H[left]] and key[H[right]]
+            Else if 2i = n then
+                Let j = 2i
+            Endif
+            If key[H[j]] < key[H[i]] then
+                Swap the array entries H[i] and H[j]
+                Heapify-down[H, j]
+            Endif
+        \end{lstlisting}
+        Proof by reverse induction on value i on pp.64 of textbook.
+    \end{itemize}
+    \item\textbf{Implementing Priority Queues with Heaps}\\
+    If the priority queue is constrained to hold at most $N$ elements at any point in time.
+    \begin{itemize}
+        \item $StartHeap(N)$ returns an empty heap $H$ that is set up to store at most $N$ elements. This operation takes $O(n)$ time, as it involves initializing the array that will hold the heap.
+        \item $Insert(H,v)$ inserts the item $v$ into the heap $H$. If the heap currently has elements, this takes $O(log(n))$ time.
+        \item $FindMin(H)$ identifies the minimum element in the heap $H$ but does not remove it. This takes $O(1)$ time.
+        \item $Delete(H,i)$ deletes the element in heap position $i$. This is implements in $O(log(n)$ time for heaps that have $n$ elements.
+        \item $ExtractMin(H)$ identifies and deletes and element with minimum key value from a heap. This is a combination of the previous two operations, so this takes $O(log(n))$ time.
+    \end{itemize}
+    To be able to access given elements of the priority queue efficiently, we simply maintain an additional array $Position$ that stores the current position of each element (each node) in the heap.
+    \begin{itemize}
+        \item To delete the element $v$, we apply $Delete(H, Position[v])$. Maintaining this array does not increase the overall running time, so we can delete an element $v$ from a heap with $n$ notes in $O(log(n))$ time.
+        \item $ChangeKey(H,v,\alpha)$ which changes the key value of element $v$ to $key(v) = \alpha$. We can implement this operation in $O(log(n))$ time by first identifying the position of element $v$ in the array by using the $Position$ array. Once we have defined the position of element $v$, we change the key and then apply \textbf{Heapify-up} or \textbf{Heapify-down} as appropriate.
+    \end{itemize}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+
+
+\end{document}
