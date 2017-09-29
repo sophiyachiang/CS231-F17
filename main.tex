@@ -9,6 +9,7 @@
 \usepackage[plain]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
+\usepackage{enumitem}
 
 \usetikzlibrary{automata,positioning}
 
@@ -288,5 +289,154 @@ We need to be able to do each of these four steps of the algorithm in constant t
 \end{homeworkProblem}
 \pagebreak
 
+\begin{homeworkProblem}
+\textbf{Graphs}\\
+\textbf{Sections 3.1 and 3.2}\\\\
+\underline{\textbf{3.1 Basic Definitions}}
+\begin{itemize}
+
+    \item A graph G encodes a pairwise relationship among objects: a collection $V$ of \textit{nodes} and a collection $E$ of \textit{edges}.
+    \item An edge $e \in E$ is a 2-element subset of $V: e = \{u,v\}$ for some $u, v \in V$ where $u, v$ are the \textit{ends} of $e$.
+    \item Undirected graphs: indicate a symmetric relationship between the ends of the edges in a graph.
+    \item Directed graphs: consists of a set of nodes $V$ and a set of \textit{directed edges} $E'$, where each $e' \in E'$ is an ordered pair $(u,v)$.
+    \item A path in an undirected graph $G=(V,E)$ is a sequence $P$ of nodes $v_1, v_2, v_3, \ldots, v_{k-1}, v_k$ such that each consecutive pair $v_i, v_{i+1}$ is joined by an edge in $G$.
+        \begin{itemize}
+            \item Simple path: if all vertices are distinct from one another
+            \item Cycle: is a path $v_1, v_2, v_3, \ldots, v_{k-1}, v_k$ where $k>2$, the first $k-1$ nodes are distinct, and $v_1 = v_k$.
+        \end{itemize}
+    \item Connected graph: if for every pair of nodes $u, v$ there is a path from $u$ to $v$.
+    \item Distance between two nodes $u, v$: the minimum number of edges in a $u-v$ path.
+    \item Tree: An undirected graph that is connected and does not contain a cycle.
+    \item Every $n-node$ tree has exactly $n-1$ edges.
+    \item Let $G$ be an undirected graph on $n$ nodes. Any of two of the following statements implies the third.
+    \begin{itemize}
+        \item G is connected.
+        \item G does not contain a cycle.
+        \item G has $n-1$ edges.
+    \end{itemize}
+\end{itemize}
+
+\underline{\textbf{3.2 Graph Connectivity and Graph Traversal}}
+\begin{itemize}
+    \item $s-t$ connectivity problem/Maze solving problem: finding a path, if any, from $s$ to $t$ in $G$.
+    \item Breadth-first search (BFS)
+    \begin{itemize}
+        \item Explore outward from $s$ in all possible directions, including nodes that are joined by an edge to $s$. Continue until no new nodes are encountered.
+        \item Layers $L_1, L_2, L_3,\ldots$: 
+        \begin{itemize}
+            \item Layer $L_0$ is the set consisting just of $s$
+            \item Layer $L_1$ consists of al nodes that are neighbors of $s$.
+            \item Assuming we have defined layers $L_1, \ldots, L_j$, then layer $L_{j+1}$ consists of all nodes that do not belong to an earlier later and that have an edge to a node in layer $L_j$.
+            \item A node fails to appear in any of the laters iff there is no path to it.
+        \end{itemize}
+        \item BFS determines the ndoes that $s$ can reach and computes the shortest paths to them.
+        \item For each $j \geq 1$, Layer $L_j$ produced by BFS consists of all nodes at distance exactly $j$ from $s$. THere is a path from $s$ to $t$ iff $t$ appears in some layer.
+        \item \textit{Breadth-first search tree}: BFS produces a tree $T$ rooted at $s$ on the set of nodes reachable from $s$: Let $T$ be a breadth-first search tree, let $x$ and $y$ be nodes in $T$ belonging to layers $L_i$ and $L_j$ respectively, and let $(x, y)$ be an edge of $G$. Then $i$ and $j$ differ at most by 1.
+    \end{itemize}
+    \item Depth-first search (DFS)
+    \begin{itemize}
+        \item We can invoke DFS from any starting point but maintain global knowledge of which nodes have already been explored.
+        \item Let $T$ be a depth-first search tree, let $x$ and $y$ be nodes in $T$, and let $(x, y)$ be an edge of $G$ that is not an edge of $T$. Then one of $x$ or $y$ is an ancestor of the other.
+    \end{itemize}
+    \item For any two nodes $s$ and $t$ in a graph, their connected components are either identical or disjoint.
+\end{itemize}
+
+\end{homeworkProblem}
+\pagebreak
+
+\begin{homeworkProblem}
+\textbf{Graph traversal}\\
+\textbf{Sections 3.3 and 3.4}\\\\
+\underline{\textbf{3.3 Implementing Graph Traversal Using Queues and Stacks}}
+\begin{itemize}
+    \item Basic representation of graphs: By an \textit{adjacency matrix} and by an \textit{adjacency list}.
+    \item A graph $G=(V,E)$, let $|V| = n$ and $|E| = m$. With at most one edge between any pair of nodes, $m \leq \binom{n}{2} \leq n^2$.
+    \item A connected graph must have at least $m \geq n-1$ edges.
+    \item Linear time for graph search: $O(m+n)$ time to read the input.
+    \item For connected graphs: $O(m+n) \equiv O(m)$ since $m\geq n-1$.
+    \item\textbf{Adjacency matrix:} Consider a graph $G = (V , E)$ with $n$ nodes, and assume the set of nodes is $V = \{1,\ldots, n\}$. 
+    \begin{itemize}
+        \item The adjacency matrix is an $n\times n$ matrix $A$ where $A[u,v]$. is equal to 1 if the graph contains the edge $(u,v)$ and 0 otherwise.
+        \item If the graph is undirected, the matrix $A$ is symmetric, with $A[u,v] = A[v,u]$ for all nodes $u, v \in V$.
+        \item Can check in $O(1)$ time if a given edge $(u,v)$ is present in the graph.
+        \item Representation takes $\Theta(n^2)$ space. When the graph has many fewer edges than $n^2$, more compact representations are possible.
+        \item Many graph algorithms need to examine all edges incident to a given node $v$ and in the matrix, you have to consider all other nodes $w$, and checking the matrix entry $A[v, w]$ to see whether the edge $(v, w)$ is present in $\Theta(n)$ time. Worst case, $v$ may have $\Theta(n)$ incident edges, so checking all edges will take $\Theta(n)$ time regardless of the representation. 
+    \end{itemize}
+    \item\textbf{Adjacency list:} Array $adj$ where $Adj[v]$ is a record containing a list of all nodes adjacent to node $v$. 
+    \begin{itemize}
+        \item Works better for sparse graphs with fewer than $n^2$ edges.
+        \item For an undirected graph $G = (V, E)$, each edge $e = (v, w) \in E$ occurs on two adjacency lists: node w appears on the list for node $v$, and node $v$ appears on the list for node $w$.
+        \item Requires only $O(m+n)$ space: array of pointers of length $n$ to set up the lists in $Adj$, and then we need space for all the lists - each edge $e = (v,w)$ appears in exactly two of the lists: one for $v$ and one for $w$. So the total length of all lists is $2m = O(m)$.
+        \item Degree $n_v$ of a node $v$ is the number of incident edges it has.
+        \item Length of the list at $Adj[v]$ is $n_v$, so the total length over all nodes is $O(\sum_{v\in V} n_v)$.
+        \item Sum of the degrees in a graph: $O(\sum_{v\in V} n_v) = 2m$.
+        \item To check if a particular edge $(u,v)$ is present in the graph: in $O(n_v)$ - by following the pointers on $u$'s adjacency list to see if edge $v$ occurs on the list.
+    \end{itemize}
+
+    \item\textit{Discovering} a node $v$ - the first time it is seen, when the algorithm finds an edge leading to $v$.
+    \item\textit{Exploring} a node $v$ - when all the incident edges to $v$ are scanned, resulting in the potential discovery of further nodes.
+    \item Implement queues and stacks using doubly-linked list - always selecting the first element on our list, different in where we insert a new element.
+    \item\textbf{Queue: }A set from which we extract elements in first-in, first-out order (FIFO) - select elements in the same order in which they were added. Elements are added to the end of the list as the last element. \textit{Implement BFS to select which node to consider next.}
+    \begin{itemize}
+        \item Implementing BFS:
+        \begin{lstlisting}
+BFS(s):
+    Set Discovered[s] = true and Discovered[v] = false for all other v 
+    Initialize L[0] to consist of the single element s
+    Set the layer counter i = 0
+    Set the current BFS tree T = ∅
+    While L[i] is not empty
+        Initialize an empty list L[i + 1] 
+        For each node u ∈ L[i]
+            Consider each edge (u, v) incident to u 
+            If Discovered[v] = false then
+                Set Discovered[v] = true
+                Add edge (u, v) to the tree T
+                Add v to the list L[i+1] 
+            Endif
+        Endfor
+        Increment the layer counter i by one 
+    Endwhile
+        \end{lstlisting}
+        \item The above implementation of the BFS algorithm runs in time $O(m + n)$ (i.e., linear in the input size), if the graph is given by the adjacency list representation.
+    \end{itemize}
+    
+    \item\textbf{Stack: }A set from which we extract elements in last-in, first-out order (LIFO) - we select an element that was added most recently. A new element is placed in the first position on the list. \textit{Implement DFS.}
+    \begin{itemize}
+        \item Implementing DFS:
+        \begin{lstlisting}
+DFS(s):
+    Initialize S to be a stack with one element s
+    While S is not empty
+        Take a node u from S
+        If Explored[u] = false then
+            Set Explored[u] = true
+            For each edge (u,v) incident to u
+                Add v to the stack S
+            Endfor
+        Endif
+    Endwhile
+        \end{lstlisting}
+        \item The above algorithm implements DFS, in the sense that it visits the nodes in exactly the same order as the recursive DFS procedure in the previous section (except that each adjacency list is processed in reverse order).
+        \item The above implementation of the DFS algorithm runs in time $O(m + n)$ (i.e., linear in the input size), if the graph is given by the adjacency list representation.
+    \end{itemize}
+\end{itemize}
+\pagebreak
+
+\underline{\textbf{3.4 Testing Bipartite-ness}}
+\begin{itemize}
+\item\textbf{Bipartite graph:} it is one where the node set $V$ can be partitioned into sets $X$ and $Y$ in such a way that every edge has one end in $X$ and the other end in $Y$
+\item If a graph $G$ is bipartite, then it cannot contain an odd cycle.
+\item To determine whether $G$ is bipartite, we can also show that we can find an odd cycle in $G$ whenever it is not bipartite.
+\item We perform BFS, colors $s$ red, all of later $L_1$ blue, all of layer $L_2$ red, and so on - coloring odd-numbered layers blue and even-numbered layers red. We implement this by adding an extra array $Color$ over the nodes. Whenever we get to a step in BFS where we are adding a node $v$ to a list $L[i+1]$, we assign $Color[v] = red$ if $i+1$ is an even number and $Color[v] = blue$ if $L[i+1]$ is an odd number. At the end of the procedure we scan all the edges and determine whether there is any edge for which both ends received the same color. Thus the coloring algorithm is $O(m+n)$, as it is for BFS.
+
+\item Let $G$ be a connected graph, and let $L_1, L_2,\ldots$ be the layers produced by BFS starting at node $s$. Then exactly one of the following two things must hold:
+    \begin{itemize}
+        \item There is no edge of $G$ joining two nodes of the same layer. In this case $G$ is a bipartite graph in which the nodes in even-numbered layers can be colored red, and the nodes in odd-numbered layers can be colored blue.
+        \item There is an edge of $G$ joining two nodes of the same layer. In this case, $G$ contains an odd-length cycle, and so it cannot be bipartite.
+    \end{itemize}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
 
 \end{document}
