@@ -12,7 +12,7 @@
 \usepackage{enumitem}
 
 \usetikzlibrary{automata,positioning}
-
+\renewcommand{\arraystretch}{1.25}
 %
 % Basic Document Settings
 %
@@ -89,7 +89,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Last updated: 20 September 2017}\\
+    \normalsize\vspace{0.1in}\small{Last updated: 6 October 2017}\\
     \vspace{3in}
 }
 
@@ -327,10 +327,10 @@ We need to be able to do each of these four steps of the algorithm in constant t
             \item Layer $L_0$ is the set consisting just of $s$
             \item Layer $L_1$ consists of al nodes that are neighbors of $s$.
             \item Assuming we have defined layers $L_1, \ldots, L_j$, then layer $L_{j+1}$ consists of all nodes that do not belong to an earlier later and that have an edge to a node in layer $L_j$.
-            \item A node fails to appear in any of the laters iff there is no path to it.
+            \item A node fails to appear in any of the layers iff there is no path to it.
         \end{itemize}
-        \item BFS determines the ndoes that $s$ can reach and computes the shortest paths to them.
-        \item For each $j \geq 1$, Layer $L_j$ produced by BFS consists of all nodes at distance exactly $j$ from $s$. THere is a path from $s$ to $t$ iff $t$ appears in some layer.
+        \item BFS determines the nodes that $s$ can reach and computes the shortest paths to them.
+        \item For each $j \geq 1$, Layer $L_j$ produced by BFS consists of all nodes at distance exactly $j$ from $s$. There is a path from $s$ to $t$ iff $t$ appears in some layer.
         \item \textit{Breadth-first search tree}: BFS produces a tree $T$ rooted at $s$ on the set of nodes reachable from $s$: Let $T$ be a breadth-first search tree, let $x$ and $y$ be nodes in $T$ belonging to layers $L_i$ and $L_j$ respectively, and let $(x, y)$ be an edge of $G$. Then $i$ and $j$ differ at most by 1.
     \end{itemize}
     \item Depth-first search (DFS)
@@ -384,7 +384,7 @@ BFS(s):
     Set Discovered[s] = true and Discovered[v] = false for all other v 
     Initialize L[0] to consist of the single element s
     Set the layer counter i = 0
-    Set the current BFS tree T = ∅
+    Set the current BFS tree T = empty set
     While L[i] is not empty
         Initialize an empty list L[i + 1] 
         For each node u ∈ L[i]
@@ -501,7 +501,7 @@ DFS(s):
             \item Breadth First Traversal: Level Order Traversal
         \end{enumerate}
         \item The maximum number of nodes at level $l = 2^{l-1}$.
-        \item Maximum number of nodes = $2^h – 1$, where $h$ is the height of the tree (Max. number of nodes on root to leaf path)
+        \item Maximum number of nodes = $2^{h}-1$, where $h$ is the height of the tree (Max. number of nodes on root to leaf path)
         \item Minimum possible height =  $ceil(Lg(n+1))$ (number of leaf nodes is always one more than nodes with two children)
         \item Time Complexity of Tree Traversal: O(n) - consider degenerate trees
     \end{itemize}
@@ -570,5 +570,200 @@ DFS(s):
 \end{enumerate}
 \end{homeworkProblem}
 \pagebreak
+
+\begin{homeworkProblem}
+\textbf{Connectivity in Graphs and Topological Ordering}\\
+\textbf{Sections 3.5 and 3.6}\\\\
+\underline{\textbf{3.5 Connectivity in Directed Graphs}}
+\begin{itemize}
+    \item In a directed graph, the edge $(u,v)$ has a direction from $u$ to $v$, so the relationship is asymmetric.
+    \item Representing directed graphs: adjacency list where each node has two lists associated with it - one list consists of nodes \textit{to which} it has edges, and a second list consisting of nodes \textit{from which} it has edges.
+    \item Graph search algorithms: directed version of BFS has run time of $O(m+n)$ since it performs at most constant work for each node and edge. It is possible for a node $s$ to have a path to a node $t$ even though $t$ has no path to $s$. Directed BFS computes the set of all nodes $t$ with the property that $s$ has a path to $t$. Such nodes may or may not have paths back to $s$.
+    \item For a given node $s$, we want the set of nodes with paths to $s$ rather than the set of nodes to which $s$ has paths -- we can define a new directed graph $G^{rev}$, that we obtain from G simply by reversing the direction of every edge.
+    \item If $u$ and $v$ are mutually reachable and $v$ and $w$ are mutually reachable, then $u$ and $w$ are mutually reachable. 
+    \item To test if a directed graph is strongly connected: (if, for every two nodes $u$ and $v$, there is a path from $u$ to $v$ and a path from $v$ to $u$) we pick any node $s$ and run BFS in G starting from $s$. We then also run BFS starting from $s$ in $G^{rev}$.
+\end{itemize}
+\underline{\textbf{3.6 Directed Acyclic Graphs and Topological Ordering}}
+\begin{itemize}
+    \item \textit{Directed acyclic graph (DAG):} A directed graph that has no cycles. E.g. if we start with the node set $\{1, 2, \ldots, n\}$ and include an edge $(i, j)$ whenever $i < j$, then the resulting directed graph has $\binom{n}{2}$ edges but no cycles.
+    \item DAGs can encode precedence relations or dependencies in a natural way. 
+    \item \textit{Topological ordering of $G$: }For a directed graph $G$, a topological ordering of G is an ordering of its nodes as $v_1, v_2,\ldots, v_n$ so that for every edge $(v_i, v_j)$, we have $i < j$.
+    \item If $G$ has a topological ordering, then $G$ is a $DAG$. And vise versa.
+    \item In every DAG $G$, there is a node $v$ with no incoming edges. 
+\begin{lstlisting}
+To compute a topological ordering of G:
+Find a node v with no incoming edges and order it first Delete v from G
+Recursively compute a topological ordering of G−{v}
+    and append this order after v
+\end{lstlisting}
+\end{itemize}
+\end{homeworkProblem}
+
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Scheduling and Greedy algorithm analysis}\\
+\textbf{Sections 4.1, 4.2 and 4.4}\\\\
+\underline{\textbf{4.1 Interval Scheduling}}
+\begin{itemize}
+    \item The greedy algorithm stays ahead
+    \item A set of requests $\{1, 2, \ldots, n\}$; where the $i$th request corresponds to an interval of time starting at $s(i)$ and finishing at $f(i)$.
+    \item A subset of requests are compatible if no two of them overlap in time, and our goal is to accept as large a compatible subset as possible. 
+    \item The earliest finish time greedy algorithm:
+    \begin{lstlisting}
+Initially let R be the set of all requests, and let A be empty
+While R is not yet empty
+    Choose a request i in R that has the smallest finishing time
+    Add request i to A
+    Delete all requests from R that are not compatible with request i
+EndWhile
+Return the set A as the set of accepted requests
+    \end{lstlisting}
+    \item Scheduling all intervals: (Interval partitioning problem)
+\begin{lstlisting}
+Sort the intervals by their start times, breaking ties arbitrarily
+Let I1, I2, ..., In denote the intervals in this order
+For j = 1, 2, 3, ..., n
+    For each interval Ii that precedes Ij in sorted order and overlaps it 
+        Exclude the label of Ii from consideration for Ij
+    Endfor
+    If there is any label from {1, 2, ..., d} that has not been excluded then
+        Assign a non-excluded label to Ij
+    Else 
+        Leave Ij unlabeled 
+    Endif
+Endfor
+    \end{lstlisting}
+\end{itemize}
+
+\underline{\textbf{4.2 Scheduling to Minimize Lateness}}
+\begin{itemize}
+    \item An exchange argument
+    \item We have a single resource and a set of $n$ requests to use the resource for an interval of time. 
+    \item The resource is available starting at time $s$, and each request $i$ has a deadline $d_i$ that requires a contiguous time interval of length $t_i$, but it is willing to be scheduled at any time before the deadline. 
+    \item Each accepted requests must be assigned an interval of time of length $t_i$, and different requests must be assigned non-overlapping intervals. 
+    \item A request $i$ is late if it misses the deadline, if $f(i) > d_i$. The lateness of such a request $i$ is defined to be $l_i = f(i)-d_i$. $l_i=0$ if a request $i$ is not late. 
+    \item Goal of problem: schedule all requests, using non-overlapping intervals, to minimize the maximum lateness, $L= max_i l_i$.
+    \item Earliest deadline first
+    \begin{lstlisting}
+Order the jobs in order of their deadlines
+Assume for simplicity of notation that d1<=...<=dn
+Initially f=s
+Consider the jobs i = 1, ..., n in this order
+    Assign job i to the time interval from s(i) = f to f(i) = f + ti
+    Let f=f+ti
+End
+Return the set of scheduled intervals [s(i), f(i)] for i = 1, ..., n
+    \end{lstlisting}
+    \item There is an optimal schedule that has no inversions and no idle time. \item The schedule $A$ produced by the greedy algorithm has optimal maximum lateness $L$.
+\end{itemize}
+
+
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Graphs and greedy algorithms}\\
+\textbf{Sections 4.4 and 4.5}\\\\
+\underline{\textbf{4.4 Shortest Paths in a Graph}}
+\begin{itemize}
+    \item Given a directed graph $G=(V, E)$ with a designated start node $s$, we assume that $s$ has a path to every other node in $G$. 
+    \item Each edge $e$ has a length $l_e\leq 0$, indicating the time(or cost) it takes to traverse $e$. 
+    \item For a path $P$, the length of $P$ ($l(P)$), is the sum of the lengths of all edges in $P$. 
+    \item Goal: determine the shortest path from $s$ to every other node in the graph. 
+    \item Dijkstra's Algorithm:
+    \begin{lstlisting}
+Dijkstra's Algorithm (G, l):
+Let S be the set of explored nodes
+    For each u in S, we store a distance d(u)
+Initially, S = {s} and d(s) = 0
+While S != V
+    Select a node v not in S with at least one edge from S for which d'(v) is as small as possible. 
+    Add v to S and define d(v) = d'(v)
+EndWhile
+    \end{lstlisting}
+    \item Consider the set S at any point in the algorithm's execution. For each $u\in S$, the path $P_u$ is a shortest $s-u$ path. 
+    \item Running time: Using a priority queue, Dijkstra's Algorithm can be implemented on a graph with $n$ nodes and $m$ edges to run in $O(m)$ time, plus the time for $n$ $ExtractMin$ and $m$ $ChangeKey$ operations. 
+\end{itemize}
+\underline{\textbf{4.5 The Minimum Spanning Tree problem}}
+\begin{itemize}
+    \item Application of exchange argument for the minimum spanning tree problem
+    \item to be continued
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Notes for exam}\\
+\begin{itemize}
+    \item 	In order of decreasing growth rates:\\
+    \begin{tabular}{|c|}
+    	\hline
+    	$2^{2^{n+1}}$ \\
+    	\hline
+    	$2^{2^{n}}$ \\
+    	\hline
+    	$(n+1)!$ \\
+		\hline
+    	$n!$ \\    
+    	\hline
+        $3^{n}$ \\
+	    \hline
+    	$n2^{n}$ \\
+    	\hline
+    	$2^{n+1}$ \\
+    	\hline
+    	$2^{n}$ \\
+    	\hline
+    	$n^{3}$ \\
+        \hline
+        $n^{2}$ , $4^{lg n}$ \\
+    	\hline
+    	$n lg n$ \\
+    	\hline
+    	$n$ , $2^{lg n}$ \\
+        \hline
+        $(\sqrt{2})^{lg n}$ , $\sqrt{n}$ \\ 
+    	\hline
+    	$lg^{2} n$ \\
+    	\hline
+    	$ln n$ \\
+    	\hline
+    	$\sqrt{ln n}$ \\
+    	\hline
+    	$ln(ln n)$ \\
+    	\hline
+    	$1$ \\
+    	\hline
+    	$\frac{1}{n}$ \\
+	    \hline
+    \end{tabular}
+		\item Suppose algorithm A has worst-case running time $O(n)$ and algorithm B has worst-case running time $O(n^{2})$. What can you say about the relative performance of the algorithms?\\
+		\textbf{Answer} \\
+The worst-case running time of the algorithms dictate how much time these algorithms would take at most. In this case, we can expect the performance of algorithm A to be better than that of algorithm B, given their relative worst-case running times to be $O(n)$ and $O(n^{2})$ respectively. This is because if we give these two algorithms the same input, it might take algorithm B exponentially longer to run compared to algorithm A, especially on a larger input n. That being said, this is only considering the worst-case running time and in reality the algorithms may perform better with different sets of input. Moreover, Big-O considers the upper bound, so the the running time of the algorithm as n (the input) gets larger is at most growing at the same rate as $n$ and $n^{2}$ respectively, for algorithms A and B.\\
+		\item Repeat part a for the worst-case running times $\Theta(n)$ and $\Theta(n^{2})$. \\
+		\textbf{Answer}\\
+		Big-theta considers the tight bound, so the the running time of the algorithm as n (the input) gets larger is growing proportionally to $n$ and $n^{2}$ respectively, for algorithms A and B. Therefore, we can safely evaluate algorithm A to have a significantly better performance than algorithm B as the input size (n) grows larger.\\
+
+    \item Greedy stays ahead proof:
+    \begin{enumerate}
+    \item\textbf{Label algorithm's partial solutions, and a general solution}. For example, let $A = \{a_1, a_2, \ldots, a_n\}$ be the solution generated by greedy algorithm with elements appearing in the order they are added. Let $O = \{o_1, o_2, \ldots, o_m\}$ be an arbitrary optimal feasible solution. $O$ does not have a natural ordering.
+    \item\textbf{Find a measure}. Define a measure $f(\dot)$ by which the greedy stays ahead of a general/optimal solution. For example, $f(a_1, \ldots, a_j)$ might be the last completion time of the first $j$ jobs, the total weight of the first $j$ nodes, or the largest index of the first $j$ characters. Define $f(o_1, \ldots, o_j)$ as well. 
+    \item\textbf{Prove greedy stays ahead.} Show that the partial solutions constructed by greedy are always just as good as the initial segments of the other optimal solution, based on measure selected. 
+    \begin{itemize}
+        \item For all indices $r\leq k$, prove by induction that $f(a_1, \ldots, a_r) [\leq, \geq] f(o_1, \ldots, o_r)$. Use algorithm to argue the inductive step. 
+    \end{itemize}
+    \item\textbf{Prove optimality.} Prove that since greedy stays ahead of the other solution with respect to the measure selected, the final output is optimal.
+    \end{enumerate}
+        \item Greedy exchange argument proof:
+    \begin{enumerate}
+    \item\textbf{Describe algorithm}
+    \item\textbf{Label your algorithm's solution, and an optimal solution}. For example, let $A = \{a_1, a_2, \ldots, a_n\}$ be the solution generated by greedy algorithm with elements. Let $O = \{o_1, o_2, \ldots, o_m\}$ be an arbitrary optimal solution. 
+    \item\textbf{Compare greedy with optimal.} Assume your optimal solution is not the same as your greedy algorithm. THen either 
+    \begin{itemize}
+        \item There is an element $O$ not in $A$ and an element of $A$ not in $O$, or
+        \item there are 2 consecutive elements in $O$ in a different order than they are in $A$ (i.e. there is an inversion)
+    \end{itemize}
+    \item\textbf{Exchange} Swap or exchange the elements in question in $O$ to make it more similar to $A$ (either swap one element out and another in for the first case, or swap the order of the elements in the second case), and argue that you come to a solution that is no worse than before. If we continue swapping, we can eliminate all differences between $O$ and $A$ without worsening the quality of the solution. But then we have shown that greedy is just as good as any optimal solution, and hence is optimal itself. 
+    \end{enumerate}
+\end{itemize}
+\end{homeworkProblem}
 
 \end{document}
