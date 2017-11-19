@@ -10,6 +10,7 @@
 \usepackage{algpseudocode}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage[linesnumbered,ruled]{algorithm2e}
 
 \usetikzlibrary{automata,positioning}
 \renewcommand{\arraystretch}{1.25}
@@ -89,7 +90,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Last updated: 6 October 2017}\\
+    \normalsize\vspace{0.1in}\small{Last updated: 25 October 2017}\\
     \vspace{3in}
 }
 
@@ -765,5 +766,110 @@ The worst-case running time of the algorithms dictate how much time these algori
     \end{enumerate}
 \end{itemize}
 \end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Divide and Conquer}\\
+\textbf{Section 5.1}\\\\
+\underline{\textbf{5.1 A First Recurrence: The Mergesort Algorithm}}
+\begin{itemize}
+    \item Mergesort: Divide the input into two pieces of equal size; solve the two subproblems on these pieces separately by recursion; then combine the two results into an overall solution, spending only linear time for the initial division and final recombining.
+    \item Any divide and conquer algorithm: need a base case for recursion; typically having it "bottom out" on inputs of some constant size.
+    \item For mergesort: we assume that once the input has been reduced to size 2, we stop the recursion and sort the two elements by comparison. 
+    \item Worst case running time for algorithm: $T(n)$ on input of size $n$. If $n$ is even, the algorithm spends $O(n)$ time to divide the input into two piece of size $n/2$ each then spending $T(n/2)$ to solve each one, and then spends $O(n)$ to combine the solutions from the two recursive calls, therefore the running time $T(n)$ satisfies the following \textit{recurrence relation}.
+    \begin{itemize}
+        \item For some constant c, $T(n) \leq 2T(n/2) + cn$ when $n>2$. And $T(2) \leq c$
+        \item Any function satisfying the above is bounded by $O(nlog(n))$ when $n>1$.
+    \end{itemize}
+    \item\textit{Recurrence relations:} An inequality/equation that bounds $T(n)$ in terms of an expression involving $T(k)$ for smaller values of $k$ and there's a base case that says $T(n)$ is equal to a constant when $n$ is a constant.
+    \item Solving recurrences: "unrolling" the recursion, accounting for the running time across the first few levels and identifying a pattern that can be continued as the recursion expands. Then summing the running times over all levels of the recursion (until it "bottoms out" on subproblems of constant size) and arriving at a total running time. \textbf{Tree method}
+    \item Guess for a solution, substitute it into the recurrence relation, and check that it works. Formally, one justifies this using an argument by induction on $n$. \textbf{Substitution method}
+ \end{itemize}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Recurrence relations and sorts}\\
+\textbf{Section 5.2, Heap sort, Quick sort}\\\\
+\underline{\textbf{5.2 Further Recurrence Relations}}
+\begin{itemize}
+    \item Considering divide-and-conquer algorithms that create recursive calls on $q$ sub-problems of size $n/2$ each and combining the results in $O(n)$ time. (Corresponds to the Mergesort recurrence when $q=2$ recursive calls are used, but other algorithms find it useful to spawn $q>2$ recursive calls, or just a single $q=1$ recursive call. 
+    \item For some constant c, $T(n) \leq qT(n/2) + cn$ when $n>2$. And $T(2) \leq c$.
+    \item Any function $T(\cdot)$ satisfying the above with $q>2$ is bounded by $O(n^{log_2q})$.
+    \item Any function $T(\cdot)$ satisfying the above with $q=1$ is bounded by $O(n)$.
+\end{itemize}
+\underline{\textbf{Heap sort}}
+\begin{itemize}
+    \item Comparison based sorting technique using binary heap data structure
+    \item Binary heap is a complete binary tree - represented as array and is space efficient. If root is stored at index $1$, then if a node has index $i$, then the left child is stored at index $2p$ and right child in $2p+1$, and parent has index $\lfloor i/2 \rfloor$.
+    \item Heap sort algorithm for sorting in increasing order: 
+    \begin{enumerate}
+        \item Build a max heap from the input data
+        \item The largest item is stored at the root of the heap. Replace with the last item of the heap followed by reducing the size of heap by 1. Heapify the root of the tree
+        \item Repeat above steps while size of heap is greater than 1
+    \end{enumerate}
+    \item Time-complexity: heapify $O(logn)$; createAndBuildHeap() $O(n)$; overall heap sort is $O(nlog(n))$
+\end{itemize}
+\underline{\textbf{Quick sort}}
+\begin{itemize}
+    \item Picks an element as pivot and partitions the given array around the picked pivot.
+    \item Quick sort algorithm (can be implemented differently):
+    \begin{enumerate}
+        \item Always pick the first element as pivot
+        \item Always pick last element as pivot
+        \item Pick a random element as pivot
+        \item Pick median as pivot
+    \end{enumerate}
+    \item Partition(): given an array and an element $x$ of array as pivot: put $x$ at its correct position in the sorted array and put all smaller elements (smaller than $x$) before $x$ and put all greater elements (greater than $x$) after $x$. (linear time)
+    \item Time complexity: $T(n) = T(n-k-1) + \Theta(n)$. 
+    \item Worst case when the partition process always picks the greatest or smallest element as pivot. e.g. If the partition strategy always chooses the last element as pivot, then the worst case occurs when the array is already sorted in increasing or decreasing order. $T(n) = T(0) + T(n-1) + \Theta(n)$; $T(n) = T(n-1) + \Theta(n)$. Time complexity is $\Theta(n^2)$
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{More Divide and Conquer}\\
+\textbf{Section 5.3}\\\\
+\underline{\textbf{5.3 Counting Inversions}}
+\begin{itemize}
+    \item Analysis of rankings - problem of comparing two rankings and how similar two rankings are. Such that I am labeling a certain set of objects with a ranking of $1, \ldots, n$, and order these labels according to a stranger's ranking to see how many pairs are "out of order".
+    \item Given a sequence of $n$ numbers $a_1, \ldots, a_n$, assuming all numbers are distinct. Define a measure that tells us how far this list is from being in ascending order.
+    \item Counting the number of inversions: two indices $i<j$ form an inversion if $a_i > a_j$, if two elements $a_i, a_j$ are "out of order". Determining the number of inversions in the sequence $a_1, \ldots, a_n$.
+    \item The number of inversions is a measure that smoothly interpolates between complete agreement (sequence already in ascending order, and therefore no inversions), and complete disagreement (the sequence is in descending order, and every pair forms an inversions, so there are $\binom{n}{2}$ inversions).
+    \item Brute force would consider every paid of numbers $(a_i, a_j)$ and determine whether they constitute an inversion, this would take $O(n^2)$ time. 
+    \item Improve to $O(nlog(n))$ time by setting $m=\lceil n/2\rceil$ and divide the list into the two pieces $a_1,\ldots, a_m$ and $a_{m+1},\ldots,a_n$.
+    \item We first count the number of inversions in each of these two halves separately. Then count the number of inversions $(a_i, a_j)$, where the two numbers belong to different halves. Trick to do this in $O(n)$ time. They are precisely the pairs $(a_i, a_j)$, where $a_i$ is in the first half, and $a_j$ is in the second half, and $a_i>a_j$.
+    \item Sort-and-Count(L) algorithm: sorts the input list and counts the number of inversions and runs in $O(nlog(n))$ time for a list with $n$ elements. 
+\begin{lstlisting}
+Sort-and-Count(L)
+    If the list has one element then
+        there are no inversions
+    Else
+        Divide the list into two halves:
+            A contains the first ⌈n/2⌉ elements
+            B contains the remaining ⌊n/2⌋ elements
+        (rA, A) = Sort-and-Count(A) 
+        (rB, B) = Sort-and-Count(B) 
+        (r,L) = Merge-and-Count(A,B)
+    Endif
+    Return r =rA +rB +r, and the sorted list L
+\end{lstlisting}
+    \item Merge-and-Count(A,B) algorithm: suppose we have recursively sorted the first and second halves of the list and counted the inversion of each. We have two sorted list $A, B$ containing the first and second halves respectively. We want to produce a single sorted list $C$ from their union, while also counting the number of inverted pairs $(a,b)$ where $a\in A$ and $b\in B$, where $a > b$. 
+
+\begin{lstlisting}
+Merge-and-Count(A,B)
+    Maintain a Current pointer into each list, initialized to point to the front elements
+    Maintain a variable Count for the number of inversions, initialized to 0
+    While both lists are nonempty:
+        Let ai and bj be the elements pointed to by the Current pointer 
+        Append the smaller of these two to the output list
+        If bj is the smaller element then
+            Increment Count by the number of elements remaining in A 
+        Endif
+        Advance the Current pointer in the list from which the smaller element was selected.
+    EndWhile
+    Once one list is empty, append the remainder of the other list to the output
+    Return Count and the merged list
+\end{lstlisting}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
 
 \end{document}
