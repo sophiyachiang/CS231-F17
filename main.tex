@@ -6,10 +6,10 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{tikz}
-\usepackage[plain]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
 \usepackage{enumitem}
+\usepackage{float}
 \usepackage[linesnumbered,ruled]{algorithm2e}
 
 \usetikzlibrary{automata,positioning}
@@ -90,7 +90,7 @@
 \title{
     \vspace{2in}
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-    \normalsize\vspace{0.1in}\small{Last updated: 25 October 2017}\\
+    \normalsize\vspace{0.1in}\small{Last updated: \today}\\
     \vspace{3in}
 }
 
@@ -594,7 +594,7 @@ DFS(s):
 \begin{lstlisting}
 To compute a topological ordering of G:
 Find a node v with no incoming edges and order it first Delete v from G
-Recursively compute a topological ordering of G−{v}
+Recursively compute a topological ordering of G-{v}
     and append this order after v
 \end{lstlisting}
 \end{itemize}
@@ -687,9 +687,23 @@ EndWhile
 \underline{\textbf{4.5 The Minimum Spanning Tree problem}}
 \begin{itemize}
     \item Application of exchange argument for the minimum spanning tree problem
-    \item to be continued
+    \item Minimum spanning tree: A minimum spanning tree (MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted (un)directed graph that connects all the vertices together, without any cycles and with the minimum possible total edge weight. That is, it is a spanning tree whose sum of edge weights is as small as possible.
+    \item Three greedy algorithms to solve the MST problem:
+    \begin{enumerate}
+        \item Kruskal's Algorithm: starts without any edges at all and builds a spanning tree by successively inserting edges from $E$ in order of increasing cost. As we move through the edges in this order, we insert each edge $e$ as long as it does not create a cycle when added to the edges we've already inserted. If, on the other hand, inserting $e$ would result in a cycle, then we simply discard $e$ and continue.
+        \item Prim's Algorithm: We start with a root node $s$ and try to greedily grow a tree from $s$ outward. At each step, we simply add the node that can be attached as cheaply as possibly to the partial tree we already have.\\
+        We maintain a set $S \subseteq V$ on which a spanning tree has been constructed so far. Initially, $S =\{s\}$. In each iteration, we grow $S$ by one node, adding the node $v$ that minimizes the “attachment cost” $min_{e=(u,v):u\in S}c_e$, and including the edge $e = (u, v)$ that achieves this minimum in the spanning tree.\\
+        Using a priority queue, Prim's Algorithm can be implemented on a graph with $n$ nodes and $m$ edge to run in $O(m)$ time, plus the time for $n$ $ExtractMin$ and $m$ $ChangeKey$ operations.
+        \item Reverse-Delete Algorithm: we start with the full graph $(V,E)$ and begin deleting edges in order of decreasing cost. As we get to each edge $e$ (starting from the most expensive), we delete it as long as doing so would not actually disconnect the graph we currently have.
+    \end{enumerate}
+    \item Cut property: (property of edge insertion) Assume that all edge costs are distinct. Let $S$ be any subset of nodes that is neither empty nor equal to all of $V$, and let edge $e = (v, w)$ be the minimum- cost edge with one end in $S$ and the other in $V-S$. Then every minimum spanning tree contains the edge $e$
+    \item Assuming all edge costs are distinct. Proof of minimum spanning tree containing $e$ by the exchange argument. Let T be a spanning tree that does not contain $e$; we need to show that T does not have the minimum possible cost. We'll do this using an exchange argument: we'll identify an edge $e'$ in $T$ that is more expensive than e, and with the property exchanging $e$ for $e'$ results in another spanning tree. This resulting spanning tree will then be cheaper than $T$, as desired.\\\\
+    The crux is therefore to find an edge that can be successfully exchanged with $e$. Recall that the ends of $e$ are $v$ and $w$. $T$ is a spanning tree, so there must be a path $P$ in $T$ from $v$ to $w$. Starting at $v$, suppose we follow the nodes of $P$ in sequence; there is a first node $w'$ on $P$ that is in $V-S$. Let $v' \in S$ be the node just before $w'$ on $P$, and let $e' = (v', w')$ be the edge joining them. Thus, $e'$ is an edge of $T$ with one end in $S$ and the other in $V - S$.\\\\
+    If we exchange $e$ for $e'$, we get a set of edges $T'=T-\{e'\}\cup\{e\}$. We claim that $T'$ is a spanning tree. Clearly $(V,T')$ is connected, since $(V,T)$ is connected, and any path in $(V, T)$ that used the edge $e' = (v', w')$ can now be “rerouted” in $(V, T')$ to follow the portion of $P$ from $v'$ to $v$, then the edge $e$, and then the portion of $P$ from $w$ to $w'$. To see that $(V, T')$ is also acyclic, note that the only cycle in $(V, T' \cup \{e'\})$ is the one composed of $e$ and the path $P$, and this cycle is not present in $(V, T')$ due to the deletion of $e'$.
+    We noted above that the edge $e'$ has one end in $S$ and the other in $V -S$. But $e$ is the cheapest edge with this property, and so $c_e < c_e'$. (The inequality is strict since no two edges have the same cost.) Thus the total cost of $T'$ is less than that of $T$, as desired.
 \end{itemize}
 \end{homeworkProblem}
+
 \pagebreak
 \begin{homeworkProblem}
 \textbf{Notes for exam}\\
@@ -784,6 +798,19 @@ The worst-case running time of the algorithms dictate how much time these algori
     \item Solving recurrences: "unrolling" the recursion, accounting for the running time across the first few levels and identifying a pattern that can be continued as the recursion expands. Then summing the running times over all levels of the recursion (until it "bottoms out" on subproblems of constant size) and arriving at a total running time. \textbf{Tree method}
     \item Guess for a solution, substitute it into the recurrence relation, and check that it works. Formally, one justifies this using an argument by induction on $n$. \textbf{Substitution method}
  \end{itemize}
+\underline{\textbf{Geometric series for solving recurrences}}
+\begin{equation}
+    \sum_{i=0}^{\infty}x^i = \dfrac{1}{1-x} = 1+ x + x^2 + x^3 + ... + x^n
+\end{equation}
+\begin{equation}
+    \sum_{k=0}^{\infty} \binom{n+k-1}{k} x^k = \dfrac{1}{(1-x)^n}
+\end{equation}
+\begin{equation}
+    \sum_{k=0}^{n} a\cdot x^k = a\cdot \dfrac{1-x^{k+1}}{(1-x)}
+\end{equation}
+\begin{equation}
+    \sum_{k=0}^{\infty} a\cdot x^k = a\cdot \dfrac{1}{(1-x)}
+\end{equation}
 \end{homeworkProblem}
 \pagebreak
 \begin{homeworkProblem}
@@ -871,5 +898,279 @@ Merge-and-Count(A,B)
 \end{itemize}
 \end{homeworkProblem}
 \pagebreak
+\begin{homeworkProblem}
+\textbf{Dynamic Programming - Basics and Principles}\\
+\textbf{Section 6.1 and 6.2}\\\\
+\underline{\textbf{6.1 Weighted Interval Scheduling: A recursive procedure}}
+\begin{itemize}
+    \item We have $n$ requests labeled $1,\ldots, n$ with each request $i$ specifying a start time $s_i$ and finish time $f_i$. Each interval $i$ also has a value/weight $v_i$. 
+    \item Two intervals are compatible if they do not overlap. Goal: To select a subset $S\subseteq\{1,\ldots,n\}$ of mutually compatible intervals, so as to maximize the sum of the values of the selected intervals $\sum_{i\in S} v_i$.
+    \item Suppose the requests are sorted in order of nondecreasing finishing time: $f_1\leq f_2\leq \ldots \leq f_n$. A request $i$ comes before a request $j$ if $i<j$.
+    \item $p(j)$, for an interval $j$ is the largest index $i<j$ such that intervals $i$ and $j$ are disjoint, so $i$ is the leftmost interval that ends before $j$ begins. $p(j) = 0$ if no request $i<j$ is disjoint from $j$. 
+    \item For any value $j$ between values $1,\ldots, n$, let $\vartheta_j$ denote the optimal solution to the problem consisting of requests $\{1,\ldots,j\}$. Let $OPT(j)$ denote the value of this solution. 
+    \item For the optimal solution $\vartheta_j$, on $\{1,\ldots,j\}$, $OPT(j)$ means either $j\in\vartheta_j$, so $OPT(j) = v_j + OPT(p(j))$ or $j\notin\vartheta_j$, so $OPT(j) = OPT(j-1)$. Therefore, $OPT(j) = max(v_j + OPT(p(j)), OPT(j-1))$.
+    \item To decide whether $n$ belongs to the optimal solution $\vartheta_j$ iff the first of the options above is at least as good as the second, so request $j$ belongs to an optimal solution on the set $\{1,\ldots,j\}$ iff $v_j + OPT(p(j)) \geq OPT(j-1)$.
+    \item Compute-Opt(j) algorithm correctly computes $OPT(j) \forall j = 1, 2, \ldots, n$, by induction. But solves $n+1$ different sub-problems and runs in exponential time as written
+    \begin{lstlisting}
+Compute-Opt(j) 
+    If j=0 then
+        Return 0 
+    Else
+        Return max(vj+Compute-Opt(p(j)), Compute-Opt(j - 1)) 
+    Endif
+    \end{lstlisting}
+    \item Memoizing the recursion: Store the value of $Compute-Opt$ in a globally accessible place the first time we compute it and use the precomputed value in place of all future recursive calls.
+    \begin{lstlisting}
+M-Compute-Opt(j) 
+    If j=0 then 
+        Return 0
+    Else if M[j] is not empty then 
+        Return M[j]
+    Else
+        Define M[j] = max(vj+M-Compute-Opt(p(j)), M-Compute-Opt(j - 1)) 
+        Return M[j]
+    Endif
+    \end{lstlisting}
+    \item The running time of $M-Compute-Opt(n)$ is $O(n)$ assuming the input intervals are sorted by their finish times. This computes the value of an optimal solution.
+    \item To compute a solution with a full optimal set of intervals as well without blowing up the run time by a factor of $O(n)$ - by recovering/tracing back the optimal solution from values saved in the array $M$ after the optimum value has been computed. 
+    \begin{lstlisting}
+Find-Solution(j) 
+    If j=0 then
+        Output nothing
+    Else
+        If vj+M[p(j)]≥M[j-1] then
+            Output j together with the result of Find-Solution(p(j))
+        Else
+            Output the result of Find-Solution(j - 1)
+        Endif 
+    Endif
+    \end{lstlisting}
+    Since $Find-Solution$ calls itself recursively only on strictly smaller values, it makes a total of $O(n)$ recursive calls, and since it spends constant time per call, given the array $M$ of the optimal values of the subproblems, $Find-Solution$ returns an optimal solution in $O(n)$ time. 
+\end{itemize}
+\underline{\textbf{6.2 Principles of Dynamic Programming: Memoization or Iteration over subproblems}}
+\begin{itemize}
+    \item The key to the efficient algorithm is the array $M$: encodes the notion that we are using the value of optimal solutions to the subproblems on intervals $\{1,\ldots,j\}$ for each $j$. Once we have the array $M[j]$, the problem is solved, because $M[n]$ contains the value of the optimal solution on the full instance, and $Find-Solution$ can be used to trace back through $M$ efficiently and return an optimal solution itself. 
+    \item We can directly compute the entries in $M$ by an iterative algorithm, rather than using the memoized recursion. 
+    \begin{lstlisting}
+Iterative-Compute-Opt
+    M[0]=0
+    For j=1,2,...,n
+        M[j]= max(vj + M[p(j)], M[j - 1]) 
+    Endfor
+    \end{lstlisting}
+    The running time for this algorithm is $O(n)$.
+    \item To develop an algorithm based on dynamic programming, one needs a collection of subproblems derived from the original problem that satisfies a few basic properties:
+    \begin{enumerate}
+        \item There are only a polynomial number of subproblems.
+        \item The solution to the original problem can be easily computed from the solutions to the subproblems. (For example, the original problem may actually be one of the subproblems.)
+        \item There is a natural ordering on subproblems from “smallest” to “largest,” together with an easy-to-compute recurrence that allows one to determine the solution to a subproblem from the solutions to some number of smaller subproblems. - depends on the type of recurrence it has
+    \end{enumerate}
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{The Knapsack Problem}\\
+\textbf{Section 6.4}\\\\
+\underline{\textbf{6.4 Subset Sums and Knapsacks: adding a variable}}
+\begin{itemize}
+    \item A single machine that can process jobs, and a set of requests $\{1,\ldots,n\}$. We can only use this resource for the period between time $0$ and time $W$, for some number $W$. Each request corresponds to a job that requires $w_i$ to process. If our goal is to process jobs so as to keep the machine as busy as possible up to the "cut off" $W$, how do we choose the jobs?
+    \item Formally: The Knapsack Problem/The Subset Sum Problem. Given $n$ items $\{1,\ldots,n\}$ and each has a given non-negative weight $w_i (\forall i = 1, \ldots, n)$. And a bound $W$. Goal: Select a subset $S$ of the items such that $\sum_{i\in S} w_i \leq W$ and, we are trying to maximize $\sum_{i\in S} w_i$.
+    \item To find out the value for $OPT(n)$, we have to consider both $OPT(n-1)$ and also the best solution we can get using the subset of the first $n-1$ items and the total allowed weight $W-w_n$. So we have to use more than one subproblem - One for each initial set $\{1, . . . , i\}$ of the items, and each possible value for the remaining available weight $w$.
+    \item Assume $W$ is an integer and all requests $i = 1, \ldots , n$ have integer weights $w_i$. We have a sub-problem for each  $i = 0, 1,\ldots , n$ and each integer $0 \leq w \leq W$.
+    \item Using $OPT(i,w)$ to denote the value of the optimal solution using a subset of the items $\{1,\ldots,i\}$ with maximum allowed weight $w$, such that 
+    \begin{center}
+        $OPT(i,w) = max_S \sum_{j\in S} w_j$
+    \end{center}
+    where the maximum is over subsets $S\subseteq \{1,\ldots,i\}$ that satisfy $\sum_{j\in S} w_j \leq w$. If $\vartheta$ is the optimum solution, then if $n\notin \vartheta$ (ignoring item $n$), then $OPT(n,W) = OPT(n-1,W)$, else $n\in \vartheta$ (adding item $n$), then $OPT(n,W) = w_n + OPT(n-1,W-w_n)$.
+    \item Therefore if $w < w_i$, then $OPT(i,w) = OPT(i-1,w)$. Otherwise, $OPT(i,w) = max(OPT(i-1,w), w_i+OPT(i-1,w-w_i))$. (**)
+    \item Algorithm that builds up a table of all $OPT(i,w)$ values while computing each of them at most once.
+    \begin{lstlisting}
+Subset-Sum(n, W)
+    Array M[0...n,0...W]
+    Initialize M[0,w]=0 for each w=0,1,...,W 
+    For i=1,2,...,n
+        For w=0,...,W
+            Use the recurrence (**) to compute M[i,w]
+        Endfor
+    Endfor
+    Return M[n, W]
+    \end{lstlisting}
+    The $Subset-Sum(n, W)$ Algorithm correctly computes the optimal value of the problem, and runs in $O(nW)$ time.
+    \item Given a table $M$ of the optimal values of the subproblems, the optimal set $S$ can be found in $O(n)$ time.
+    \item The Knapsack Problem is solved in $O(nW)$ time. Given each item $i$ has a non-negative weight $w_i$, and a distinct value $v_i$. Goal: find a subset $S$ of maximum value $\sum_{i\in S} v_i$, subject to the restriction that the total weight of the set should not exceed $W:\sum_{i\in S} w_i \leq W$.
+    \item Two cases:
+    \begin{itemize}
+        \item If $n\notin\vartheta$, then $OPT(n,W)=OPT(n-1,W)$.
+        \item If $n\in \vartheta$,then $OPT(n,W)=v_n+OPT(n-1,W-w_n)$.
+    \end{itemize}
+    \item If $w < w_i$ then $OPT(i, w) = OPT(i - 1, w)$. Otherwise, $OPT(i,w)=max(OPT(i-1,w),v_i +OPT(i-1,w-w_i))$.
+\end{itemize}
+\end{homeworkProblem}
+\pagebreak
+\begin{homeworkProblem}
+\textbf{Dynamic Programming - Graphs}\\
+\textbf{Section 6.8}\\\\
+\underline{\textbf{6.8 Shortest Paths in a Graph}}
+\begin{itemize}
+    \item The problem: Let $G=(V,E)$ be a directed graph, assuming each edge $(i,j)\in E$ has an associated weight $c_{ij}$. Let the weight $c_{ij}$ represent the cost for going directly from node $i$ to node $j$ in the graph.
+    \item Dynamic Program approach: Finding a shortest path from $s$ to $t$ when they are negative edge costs but no negative cycles.
+    \item If $G$ has no negative cycles, then there is a shortest path from $s$ to $t$ that is simple (i.e., does not repeat nodes), and hence has at most $n - 1$ edges. \textbf{Proof: }Since every cycle has non-negative cost, the shortest path $P$ from $s$ to $t$ with the fewest number of edges does not repeat any vertex $v$. For if $P$ did repeat a vertex $v$, we could remove the portion of $P$ between consecutive visits to $v$, resulting in a path of no greater cost and fewer edges.
+    \item Let's fix an optimal path $P$ representing $OPT(i, v)$, then 
+    \begin{itemize}
+        \item If the path $P$ uses at most $i-1$ edges, then $OPT(i,v)=OPT(i-1,v)$
+        \item If the path $P$ uses $i$ edges, and the first edge is $(v, w)$, then $OPT(i, v) = c_{vw} + OPT(i - 1, w)$.
+    \end{itemize}
+    \item Recursive formula: If $i > 0$ then, $OPT(i, v) = min(OPT(i − 1, v), min_{w\in V}(OPT(i − 1, w) + c_{vw}))$. (***)
+    \item Using the recurrence above, we can define the following algorithm to compute the value $OPT(n-1,s)$. The $Shortest-Path$ method correctly computes the minimum cost of an $s-t$ path in any graph that has no negative cycles, and runs in $O(n^3)$ time.
+    \begin{lstlisting}
+Shortest-Path(G, s, t)
+    n = number of nodes in G
+    Array M[0...n-1, V]
+    Define M[0,t] = 0 and M[0,v] = infinity for all other v in V 
+    For i=1,..., n-1
+        For v in V in any order
+            Compute M[i, v] using the recurrence (***)
+        Endfor
+    Endfor
+    Return M[n-1, s]
+    \end{lstlisting}
+\end{itemize}
+\end{homeworkProblem}
+
+\pagebreak
+\begin{homeworkProblem}
+\textbf{More notes for exam}
+\begin{itemize}
+\item Sorting algorithms and worst-case complexities:
+
+\begin{tabular}{|c|c|}
+    \hline
+    Selection Sort & $O(n^2)$\\
+    \hline
+    Bubble Sort & $O(n^2)$\\
+    \hline
+    Insertion Sort & $O(n^2)$\\
+    \hline
+    Heap Sort & $O(nlog(n))$\\
+    \hline
+    Quick Sort & $O(nlog(n))$\\
+    \hline
+    Merge Sort & $O(nlog(n))$\\
+    \hline
+\end{tabular}
+\item Searching algorithms and worst-case complexities:
+
+\begin{tabular}{|c|c|}
+    \hline
+    Linear Search & $O(n)$\\
+    \hline
+    Binary Search & $O(log(n))$\\
+    \hline
+\end{tabular}
+\item\textbf{Selection Sort}: The selection sort algorithm sorts an array by repeatedly finding the minimum element (considering ascending order) from unsorted part and putting it at the beginning. The algorithm maintains two subarrays in a given array.
+\begin{enumerate}
+    \item The subarray which is already sorted.
+    \item Remaining subarray which is unsorted.
+\end{enumerate}
+In every iteration of selection sort, the minimum element (considering ascending order) from the unsorted subarray is picked and moved to the sorted subarray.
+
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.5\linewidth]{selection.jpg}
+		\caption{The recurrence is $O(n^2)$}
+		\label{fig}
+\end{figure}
+\pagebreak
+\item\textbf{Bubble sort: } repeatedly swapping the adjacent elements if they are in wrong order.
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\linewidth]{bubble.png}
+		\caption{The recurrence is $O(n^2)$}
+		\label{fig}
+\end{figure}
+
+\item\textbf{Insertion sort: } Given an array $A[1\ldots n]$ of size $n$, the recursive insertion sort will recursively call on the insertion function for $A[1\ldots n-1]$ until the size of the array is 1, and then insert the last element $A[n]$ into the sorted array of $A[1\ldots n-1]$. The pseudocode for the algorithm is as follows:
+\begin{algorithm}[h]
+    \SetKwProg{InsertionSort}{InsertionSort}{}{}
+    \InsertionSort{($A$, $n$):}{
+        \If{$n == 1$}{
+            \Return
+        }
+        \textbf{InsertionSort($A$, $n-1$)}\;
+        Set $a = n - 1$\;
+        Set $b = a - 1$\;
+        Set $temp = A[a]$\;
+        \While{$b\leq 1$ and $A[b] > temp$}{
+            Set $A[b+1] = A[b]$\;
+            Set $b = b-1$\;
+        }
+        Set $A[b+1] = temp$\;
+        \Return
+    }
+\caption{Insertion sort recursion pseudocode}
+\end{algorithm}
+
+The recurrence for the running time of this algorithm is:
+\begin{equation*}
+  T(n)=\begin{cases}
+    1, & \text{if $n = 1$}.\\
+    T(n-1) + O (n), & \text{if $n>1$}.
+  \end{cases}
+\end{equation*}
+
+The time to sort the array if it only contains one element is constant: $T(1) = O(1) = 1$.\\
+To sort an array with $n$ elements, we have to sort the array of $n-1$ elements and basically make $n-1$ comparisons as well, bringing us to $T(n) = T(n-1) + (n-1)$.\\
+Every iteration until $n=1$, we have to sum up the total operations made at each step, so
+\begin{equation*}
+    T(n) + T(n-1) + T(n-2) + \ldots + T(1)
+    = T(n-1) + T(n-2) + \ldots + T(2) + T(1)
+\end{equation*}
+
+\begin{equation*}
+    T(n) = T(1) + \dfrac{n(n-1)}{2} = 1 + \dfrac{n(n-1)}{2} = O(n^2)
+\end{equation*}
+
+\item\textbf{Heap sort: }Creating a Heap of the unsorted list. Then a sorted array is created by repeatedly removing the largest/smallest element from the heap, and inserting it into the array. The heap is reconstructed after each removal.
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.4\linewidth]{heap.png}
+		\caption{The recurrence is $O(nlog(n))$}
+		\label{fig}
+\end{figure}
+
+\item\textbf{Quick sort: }The key process in quickSort is partition(). Target of partitions is, given an array and an element x of array as pivot, put x at its correct position in sorted array and put all smaller elements (smaller than x) before x, and put all greater elements (greater than x) after x. All this should be done in linear time.\\
+\begin{lstlisting}
+/* low  --> Starting index,  high  --> Ending index */
+quickSort(arr[], low, high)
+{
+    if (low < high)
+    {
+        /* pi is partitioning index, arr[p] is now
+           at right place */
+        pi = partition(arr, low, high);
+
+        quickSort(arr, low, pi - 1);  // Before pi
+        quickSort(arr, pi + 1, high); // After pi
+    }
+}
+\end{lstlisting}
+
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{quick.png}
+		\caption{The recurrence is $O(nlog(n))$}
+		\label{fig}
+\end{figure}
+\item\textbf{Merge sort: }Like Merge Sort, QuickSort is a Divide and Conquer algorithm. It picks an element as pivot and partitions the given array around the picked pivot. There are many different versions of quickSort that pick pivot in different ways.\\
+The key process in quickSort is partition(). Target of partitions is, given an array and an element x of array as pivot, put x at its correct position in sorted array and put all smaller elements (smaller than x) before x, and put all greater elements (greater than x) after x. All this should be done in linear time.
+
+\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.7\linewidth]{merge.jpg}
+		\caption{The recurrence is $O(nlog(n))$}
+		\label{fig}
+\end{figure}
+\end{itemize}
+\end{homeworkProblem}
 
 \end{document}
